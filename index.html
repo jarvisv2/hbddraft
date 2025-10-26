@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="title" content="Happy Birthday | darkshadeoflove">
+    <title>Happy Birthday | darkshadeoflove</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="darkshadeoflove"></script>
+    <style>
+        /* Timer Overlay Styles */
+        #timer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
+        }
+
+        #timer-display {
+            font-size: 120px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #timer-text {
+            font-size: 28px;
+            color: white;
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        /* Cake Cutting Section Styles */
+        #cake-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #ffd1dc 0%, #fff0f5 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #cake-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        #cake-image {
+            width: 350px;
+            height: auto;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+            transition: all 0.5s ease;
+        }
+
+        #cake-image.cut {
+            animation: cakeSplit 1s ease forwards;
+        }
+
+        @keyframes cakeSplit {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(0.5); opacity: 0; }
+        }
+
+        .candle-flame {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 30px;
+            background: radial-gradient(ellipse at center, #fff 0%, #ffcc00 30%, #ff6600 60%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1.1, 0.9); opacity: 0.9; }
+        }
+
+        #cut-button {
+            padding: 20px 50px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+            transition: all 0.3s ease;
+            animation: buttonBounce 2s ease infinite;
+        }
+
+        @keyframes buttonBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #cut-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
+        }
+
+        #cut-button:active {
+            transform: scale(0.95);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            animation: confettiFall 3s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(600px) rotate(720deg); opacity: 0; }
+        }
+
+        #cake-text {
+            font-size: 32px;
+            color: #f5576c;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hidden audio player */
+        #birthday-audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer Overlay -->
+    <div id="timer-overlay">
+        <div id="timer-display">3</div>
+        <div id="timer-text">Get ready for something special...</div>
+    </div>
+
+    <!-- Cake Cutting Section -->
+    <div id="cake-section">
+        <div id="cake-text">Make a Wish & Cut the Cake! 🎂</div>
+        <div id="cake-container">
+            <div class="candle-flame"></div>
+            <svg id="cake-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Candle -->
+                <rect x="95" y="30" width="10" height="25" fill="#ff6b6b" rx="2"/>
+                <!-- Flame handled by CSS -->
+                
+                <!-- Top Layer -->
+                <ellipse cx="100" cy="70" rx="60" ry="15" fill="#ff69b4"/>
+                <rect x="40" y="70" width="120" height="30" fill="#ff1493"/>
+                <ellipse cx="100" cy="100" rx="60" ry="15" fill="#c71585"/>
+                
+                <!-- Middle Layer -->
+                <ellipse cx="100" cy="100" rx="70" ry="17" fill="#ffb6c1"/>
+                <rect x="30" y="100" width="140" height="35" fill="#ff69b4"/>
+                <ellipse cx="100" cy="135" rx="70" ry="17" fill="#ff1493"/>
+                
+                <!-- Bottom Layer -->
+                <ellipse cx="100" cy="135" rx="80" ry="20" fill="#ffc0cb"/>
+                <rect x="20" y="135" width="160" height="40" fill="#ffb6c1"/>
+                <ellipse cx="100" cy="175" rx="80" ry="20" fill="#ff69b4"/>
+                
+                <!-- Decorations -->
+                <circle cx="70" cy="85" r="4" fill="#fff"/>
+                <circle cx="100" cy="85" r="4" fill="#fff"/>
+                <circle cx="130" cy="85" r="4" fill="#fff"/>
+                <circle cx="60" cy="120" r="4" fill="#fff"/>
+                <circle cx="90" cy="120" r="4" fill="#fff"/>
+                <circle cx="110" cy="120" r="4" fill="#fff"/>
+                <circle cx="140" cy="120" r="4" fill="#fff"/>
+                <circle cx="50" cy="155" r="5" fill="#ffd700"/>
+                <circle cx="80" cy="155" r="5" fill="#ffd700"/>
+                <circle cx="120" cy="155" r="5" fill="#ffd700"/>
+                <circle cx="150" cy="155" r="5" fill="#ffd700"/>
+            </svg>
+        </div>
+        <button id="cut-button">
+            <i class="fa-solid fa-cake-candles"></i> Cut the Cake!
+        </button>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="birthday-audio" preload="auto">
+        <source src="https://www.youtube.com/watch?v=kcGojPJzh1k" type="audio/mpeg">
+    </audio>
+
+    <!-- Main Content -->
+    <div id="wrapper" style="display: none;">
+        <div class="flag__birthday">
+            <img src="./images/1.png" alt="" width="350" class="flag__left">
+            <img src="./images/1.png" alt="" width="350" class="flag__right">
+        </div>
+        <div class="content">
+            <div class="left">
+                <div class="title">
+                    <h1 class="happy">
+                        <span style="--t: 4s;">H</span>
+                        <span style="--t: 4.2s;">a</span>
+                        <span style="--t: 4.4s;">p</span>
+                        <span style="--t: 4.6s;">p</span>
+                        <span style="--t: 4.8s;">y</span>
+                    </h1>
+                    <h1 class="birthday">
+                        <span style="--t: 5s;">B</span>
+                        <span style="--t: 5.2s;">i</span>
+                        <span style="--t: 5.4s;">r</span>
+                        <span style="--t: 5.6s;">t</span>
+                        <span style="--t: 5.8s;">h</span>
+                        <span style="--t: 6s;">d</span>
+                        <span style="--t: 6.2s;">a</span>
+                        <span style="--t: 6.4s;">y</span>
+                    </h1>
+                    <div class="hat">
+                        <img src="./images/hat.png" alt="" width="130">
+                    </div>
+                </div>
+                <div class="date__of__birth">
+                    <span></span>
+                </div>
+                <div class="btn">
+                    <button id="btn__letter">
+                        Click here Supriya ❤️
+                        <i class="fa-regular fa-envelope"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="right">
+                <div class="box__account">
+                    <div class="image">
+                        <img src="./images/r5.png" alt="">
+                    </div>
+                    <div class="name">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Supriya ❤️</span>
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="balloon_one">
+                        <img width="100px" src="./images/balloon1.png" alt="">
+                    </div>
+                    <div class="balloon_two">
+                        <img width="100px" src="./images/balloon2.png" alt="">
+                    </div>
+                </div>
+                <div class="cricle">
+                    <div class="text__cricle">
+                        <span style="--i: 1;">h</span>
+                        <span style="--i: 2;">a</span>
+                        <span style="--i: 3;">p</span>
+                        <span style="--i: 4;">p</span>
+                        <span style="--i: 5;">y</span>
+                        <span style="--i: 6;">-</span>
+                        <span style="--i: 7;">b</span>
+                        <span style="--i: 8;">i</span>
+                        <span style="--i: 9;">r</span>
+                        <span style="--i: 10;">t</span>
+                        <span style="--i: 11;">h</span>
+                        <span style="--i: 12;">d</span>
+                        <span style="--i: 13;">a</span>
+                        <span style="--i: 14;">y</span>
+                        <span style="--i: 15;">-</span>
+                    </div>
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="decorate_star star1" style="--t: 15s;"></div>
+        <div class="decorate_star star2" style="--t: 15.2s;"></div>
+        <div class="decorate_star star3" style="--t: 15.4s;"></div>
+        <div class="decorate_star star4" style="--t: 15.6s;"></div>
+        <div class="decorate_star star5" style="--t: 15.8s;"></div>
+        <div class="decorate_flower--one" style="--t: 15s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_flower--two" style="--t: 15.3s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_flower--three" style="--t: 15.6s;">
+            <img width="20" src="./images/decorate_flower.png" alt="">
+        </div>
+        <div class="decorate_bottom">
+            <img src="./images/decorate.png" alt="" width="100">
+        </div>
+        <div class="smiley__icon">
+            <img src="./images/smiley_icon.png" alt="" width="100">
+        </div>
+
+        <div class="box__letter">
+            <div class="letter__border">
+                <div class="letter">
+                    <div class="title__letter">
+                    </div>
+                    <div class="content__letter">
+                        <div class="left">
+                            <img id="heart__letter" src="https://media.giphy.com/media/YKUvclrGYmDKXwtphf/giphy.gif" alt="">
+                            <img class="heart heart_1" style="--t: 0.2s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_2" style="--t: 0.4s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_3" style="--t: 0.6s" width="20" src="./images/heart.png" alt="">
+                            <img class="heart heart_4" style="--t: 0.8s" width="20" src="./images/heart.png" alt="">
+                        </div>
+                        <div class="right">
+                            <div class="love__img">
+                                <img src="https://media.giphy.com/media/m85llaN7ZkFIHtURiC/giphy.gif" alt="" width="220">
+                            </div>
+                            <div class="text__letter">
+                                 <p></p>
+                            </div>
+                            <img id="mewmew" width="80" src="./images/mewmew.gif" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="copy">
+        <p class="text-center text-white text-sm">darkshadeoflove <a
+            href="https://www.instagram.com/@darkshadeoflove"></a></p>
+    </div>
+
+<script>
+    // Timer countdown functionality
+    let countdown = 3;
+    const timerDisplay = document.getElementById('timer-display');
+    const timerOverlay = document.getElementById('timer-overlay');
+    const cakeSection = document.getElementById('cake-section');
+    const wrapper = document.getElementById('wrapper');
+    
+    const timerInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            timerDisplay.textContent = countdown;
+        } else {
+            clearInterval(timerInterval);
+            timerOverlay.style.display = 'none';
+            cakeSection.style.display = 'flex';
+            
+            // Try to play audio (note: YouTube links won't work directly in audio tags)
+            // You'll need to download the audio file or use an embed player
+            playBackgroundMusic();
+        }
+    }, 1000);
+
+    // Background music function
+    function playBackgroundMusic() {
+        // Note: Direct YouTube links don't work in audio tags
+        // You need to either:
+        // 1. Download the audio file and host it
+        // 2. Use YouTube iframe API
+        // 3. Use a third-party service to extract audio
+        
+        // Fallback: Create YouTube iframe player
+        const audioContainer = document.createElement('div');
+        audioContainer.innerHTML = `
+            <iframe id="youtube-player" width="0" height="0" 
+                src="https://www.youtube.com/embed/kcGojPJzh1k?autoplay=1&loop=1&playlist=kcGojPJzh1k" 
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+            </iframe>
+        `;
+        document.body.appendChild(audioContainer);
+    }
+
+    // Cake cutting functionality
+    const cutButton = document.getElementById('cut-button');
+    const cakeImage = document.getElementById('cake-image');
+    const cakeContainer = document.getElementById('cake-container');
+
+    cutButton.addEventListener('click', function() {
+        // Add cut animation
+        cakeImage.classList.add('cut');
+        
+        // Create confetti
+        createConfetti();
+        
+        // Hide button
+        cutButton.style.display = 'none';
+        
+        // Show main content after animation
+        setTimeout(() => {
+            cakeSection.style.display = 'none';
+            wrapper.style.display = 'block';
+
+            // start typing the date when wrapper is visible for smoother UX
+            startDateTyping(80);
+        }, 1500);
+    });
+
+    // Confetti creation
+    function createConfetti() {
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            cakeSection.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 3000);
+        }
+    }
+
+    // Original birthday page script
+    let datetxt = "2 Nov 1999";
+    let datatxtletter = "Happy birthday to the most beautiful, special girl in my heart. May your birthday be as beautiful and special as you are. Wishing you all the happiness your heart can hold on your special day.💕"
+    let titleLetter = "For You";
+    let charArrDate = datetxt.split('');
+    let charArrDateLetter = datatxtletter.split('');
+    let charArrTitle = titleLetter.split('');
+    let currentIndex = 0;
+    let currentIndexLetter = 0;
+    let currentIndexTitle = 0;
+    let date__of__birth = document.querySelector(".date__of__birth span");
+    let text__letter = document.querySelector(".text__letter p");
+    
+    // Replace setInterval typing with requestAnimationFrame for smoother rendering
+    function startDateTyping(msPerChar = 100) {
+        let idx = 0;
+        let last = performance.now();
+        function step(now) {
+            if (now - last >= msPerChar) {
+                date__of__birth.textContent += charArrDate[idx++];
+                last = now;
+            }
+            if (idx < charArrDate.length) {
+                requestAnimationFrame(step);
+            } else {
+                const star = document.createElement("i");
+                star.className = "fa-solid fa-star";
+                document.querySelector(".date__of__birth").prepend(star);
+                document.querySelector(".date__of__birth").appendChild(star.cloneNode(true));
+            }
+        }
+        requestAnimationFrame(step);
+    }
+    
+    var intervalContent;
+    var intervalTitle;
+    $("#btn__letter").on("click", function(){
+        $(".box__letter").slideDown()
+        setTimeout(function(){
+            $(".letter__border").slideDown();
+        },1000)
+        setTimeout(function(){
+            intervalTitle = setInterval(function(){
+                if(currentIndexTitle < charArrTitle.length){
+                    document.querySelector(".title__letter").textContent += charArrTitle[currentIndexTitle];
+                    let i = document.createElement("i");
+                    i.className = "fa-solid fa-heart"
+                    document.querySelector(".title__letter").appendChild(i)
+                    currentIndexTitle++;
+                }
+                else{
+                    clearInterval(intervalTitle)
+                }
+            },100)
+        },2000)
+        setTimeout(function(){
+            document.querySelector("#heart__letter").classList.add("animationOp");
+            document.querySelector(".love__img").classList.add("animationOp");
+            document.querySelector("#mewmew").classList.add("animationOp");
+        },2800)
+        setTimeout(function(){
+            document.querySelectorAll(".heart").forEach((item)=>{
+                item.classList.add("animation")
+            })
+        },3500)
+        setTimeout(function(){
+            intervalContent = setInterval(function(){
+                if(currentIndexLetter < charArrDateLetter.length){
+                    text__letter.textContent += charArrDateLetter[currentIndexLetter];
+                    currentIndexLetter++;
+                }
+                else{
+                    clearInterval(intervalContent)
+                }
+            },50)
+        },6000)
+    })
+    
+    $(".close").on("click", function(){
+        clearInterval(intervalContent)
+        document.querySelector(".title__letter").textContent = "";
+        text__letter.textContent = "";
+        currentIndexLetter = 0
+        currentIndexTitle = 0
+        document.querySelector("#heart__letter").classList.remove("animationOp");
+        document.querySelector(".love__img").classList.remove("animationOp");
+        document.querySelector("#mewmew").classList.remove("animationOp");
+        document.querySelectorAll(".heart").forEach((item)=>{
+                item.classList.remove("animation")
+            })
+        $(".box__letter").slideUp();
+        $(".letter__border").slideUp();
+    })
+</script>
+</body>
+</html>
